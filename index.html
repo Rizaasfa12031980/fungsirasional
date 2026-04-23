@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafik Fungsi Rasional | Media Interaktif</title>
+    <style>
+        /* === VARIABEL CSS === */
+        :root {
+            --primary: #0a2540; /* Navy */
+            --secondary: #2563eb; /* Biru */
+            --light-blue: #eff6ff;
+            --accent: #f59e0b; /* Kuning/Orange */
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --transition: all 0.3s ease;
+        }
+
+        /* === RESET & BASE === */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-blue); color: var(--text-dark); line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        button { cursor: pointer; border: none; outline: none; font-family: inherit; transition: var(--transition); }
+        
+        /* === TYPOGRAPHY === */
+        h1, h2, h3 { color: var(--primary); margin-bottom: 1rem; }
+        p { margin-bottom: 1rem; color: var(--text-light); }
+        .text-center { text-align: center; }
+
+        /* === LAYOUTING & UTILITIES === */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .card { background: var(--white); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-md); margin-bottom: 24px; transition: var(--transition); }
+        .card:hover { box-shadow: var(--shadow-lg); }
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .hidden { display: none !important; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem; }
+        .btn-primary { background: var(--secondary); color: var(--white); }
+        .btn-primary:hover { background: var(--primary); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); }
+        .btn-outline:hover { background: var(--light-blue); }
+
+        /* === NAVBAR (STICKY TOP) === */
+        header { background: var(--white); box-shadow: var(--shadow-md); position: sticky; top: 0; z-index: 1000; padding: 15px 0; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        
+        .nav-links { display: flex; gap: 5px; }
+        .nav-links li a { padding: 10px 15px; border-radius: 8px; font-weight: 600; color: var(--text-light); transition: var(--transition); display: flex; align-items: center; gap: 8px; }
+        .nav-links li a:hover { background: var(--light-blue); color: var(--secondary); }
+        .nav-links li a.active { background: var(--secondary); color: var(--white); }
+
+        .nav-controls { display: flex; gap: 10px; align-items: center; }
+        .icon-btn { background: var(--light-blue); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+        .icon-btn:hover { background: var(--secondary); color: var(--white); }
+        .hamburger { display: none; font-size: 1.5rem; background: none; border: none; color: var(--primary); }
+
+        /* === SECTIONS === */
+        section { padding: 40px 0; animation: fadeIn 0.5s ease; min-height: calc(100vh - 80px); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* === BERANDA === */
+        .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-bottom: 40px; }
+        .hero-text h1 { font-size: 2.5rem; line-height: 1.2; }
+        .hero-image img { width: 100%; max-width: 400px; }
+        .progress-container { background: #e2e8f0; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 10px; }
+        .progress-bar { height: 100%; background: var(--success); width: 0%; transition: width 0.5s ease; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .thumbnail-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .thumb-card { background: var(--white); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 2px solid var(--light-blue); text-align: center; padding: 15px; }
+
+        /* === MATERI === */
+        .materi-layout { display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+        .materi-content { background: var(--white); padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); }
+        .materi-step { display: none; }
+        .materi-step.active { display: block; animation: fadeIn 0.4s; }
+        .materi-nav { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        .audio-btn { background: var(--accent); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 15px; display: inline-flex; align-items: center; gap: 8px; }
+        
+        /* Flashcard */
+        .flashcard { perspective: 1000px; width: 100%; height: 200px; margin: 20px 0; cursor: pointer; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-md); }
+        .flashcard-front { background-color: var(--secondary); color: white; font-size: 1.2rem; font-weight: bold; }
+        .flashcard-back { background-color: var(--primary); color: white; transform: rotateY(180deg); }
+
+        /* Mini Simulasi */
+        .simulation-container { background: var(--white); padding: 20px; border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+        .canvas-container { position: relative; width: 100%; aspect-ratio: 4/3; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+        canvas { width: 100%; height: 100%; }
+        .controls { display: grid; gap: 10px; }
+        .slider-group { display: flex; align-items: center; gap: 10px; }
+        .slider-group label { width: 30px; font-weight: bold; color: var(--primary); }
+        .slider-group input { flex-grow: 1; }
+
+        /* === LATIHAN === */
+        .quiz-section { background: var(--white); padding: 30px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); margin-bottom: 30px; }
+        .tf-btn-group { display: flex; gap: 15px; margin-top: 15px; }
+        .tf-btn { flex: 1; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; border: 2px solid #e2e8f0; background: white; }
+        .tf-btn.true:hover { border-color: var(--success); color: var(--success); background: #d1fae5; }
+        .tf-btn.false:hover { border-color: var(--danger); color: var(--danger); background: #fee2e2; }
+        
+        /* Drag Drop / Mencocokkan (Tap to Match for mobile friendly) */
+        .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .match-col { display: flex; flex-direction: column; gap: 10px; }
+        .match-item { padding: 15px; background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 8px; cursor: pointer; text-align: center; user-select: none; transition: all 0.2s; }
+        .match-item.selected { border-color: var(--secondary); background: var(--light-blue); transform: scale(1.02); }
+        .match-item.matched { background: #d1fae5; border-color: var(--success); color: var(--success); cursor: default; }
+
+        /* === REFLEKSI === */
+        .emoji-group { display: flex; justify-content: center; gap: 20px; margin: 30px 0; }
+        .emoji-btn { font-size: 3rem; background: none; transition: transform 0.2s; opacity: 0.6; filter: grayscale(100%); }
+        .emoji-btn:hover, .emoji-btn.active { transform: scale(1.2); opacity: 1; filter: grayscale(0%); }
+        .checklist { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .check-item { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
+        .check-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--secondary); }
+
+        /* === PENGEMBANG === */
+        .dev-profile { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .dev-avatar { width: 120px; height: 120px; background: var(--secondary); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; margin-bottom: 20px; }
+
+        /* FOOTER */
+        footer { text-align: center; padding: 20px; background: var(--primary); color: white; margin-top: 40px; }
+
+        /* NOTIFICATION TOAST */
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--primary); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); box-shadow: var(--shadow-lg); transition: visibility 0s, opacity 0.5s linear; opacity: 0; font-weight: bold; }
+        #toast.show { visibility: visible; opacity: 1; }
+
+        /* === RESPONSIVE (MEDIA QUERIES) === */
+        @media (max-width: 900px) {
+            .materi-layout { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--white); box-shadow: var(--shadow-md); padding: 10px 20px; }
+            .nav-links.show { display: flex; }
+            .hamburger { display: block; }
+            .hero { grid-template-columns: 1fr; text-align: center; }
+            .thumbnail-cards { grid-template-columns: 1fr; }
+            .hero-image { display: none; }
+            .match-container { grid-template-columns: 1fr; }
+            .btn { width: 100%; min-height: 48px; } /* Touch target */
+            .icon-btn { min-width: 48px; min-height: 48px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY HEADER -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                MathFun XI
+            </div>
+            <button class="hamburger" id="menuToggle" aria-label="Menu Utama">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#beranda" class="active" data-target="beranda"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Beranda</a></li>
+                <li><a href="#materi" data-target="materi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Materi</a></li>
+                <li><a href="#latihan" data-target="latihan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Latihan</a></li>
+                <li><a href="#refleksi" data-target="refleksi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Refleksi</a></li>
+                <li><a href="#pengembang" data-target="pengembang"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Profil</a></li>
+            </ul>
+            <div class="nav-controls">
+                <button class="icon-btn" id="audioToggle" aria-label="Toggle Audio" title="Mute/Unmute BGM">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="audioIcon"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                </button>
+                <button class="icon-btn" id="fullscreenToggle" aria-label="Full Screen" title="Full Screen">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="fsIcon"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Progress Bar Global -->
+        <div style="width: 100%; height: 4px; background: #e2e8f0; position: absolute; bottom: 0;">
+            <div id="globalProgress" style="height: 100%; background: var(--accent); width: 0%; transition: width 0.3s;"></div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- SECTION: BERANDA -->
+        <section id="beranda" class="active">
+            <div class="hero">
+                <div class="hero-text">
+                    <h1>Mari Memahami <span style="color: var(--secondary)">Grafik Fungsi Rasional</span></h1>
+                    <p>Pelajari cara mudah menggambar grafik fungsi rasional dengan visualisasi interaktif dan latihan yang menyenangkan. Cocok untuk siswa kelas XI!</p>
+                    <button class="btn btn-primary" onclick="app.navigate('materi')" style="margin-top: 15px;">
+                        Mulai Belajar <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                </div>
+                <div class="hero-image">
+                    <!-- Inline SVG Illustration -->
+                    <svg viewBox="0 0 400 300" width="100%" height="100%">
+                        <rect width="400" height="300" fill="#f8fafc" rx="20"/>
+                        <line x1="200" y1="20" x2="200" y2="280" stroke="#cbd5e1" stroke-width="2"/>
+                        <line x1="20" y1="150" x2="380" y2="150" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M 50 280 Q 150 280 180 150 T 190 20" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M 210 280 Q 250 20 350 20" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="200" y1="20" x2="200" y2="280" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,5"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>🏆 Dashboard Kemajuan</h3>
+                    <p>Progress Belajar Anda:</p>
+                    <div class="flex" style="justify-content: space-between; align-items: center;">
+                        <h2 style="margin:0; color: var(--success);" id="progressText">0%</h2>
+                        <span id="badgeDisplay" style="font-size: 2rem; filter: grayscale(100%);" title="Badge Pencapaian">🏅</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBarHome"></div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>👀 Contoh Grafik</h3>
+                    <div class="thumbnail-cards">
+                        <div class="thumb-card">
+                            <svg viewBox="0 0 100 100" width="100%" height="80"><path d="M 10 90 Q 40 90 45 50 T 48 10" fill="none" stroke="#2563eb" stroke-width="3"/><path d="M 52 90 Q 60 10 90 10" fill="none" stroke="#2563eb" stroke-width="3"/><line x1="50" y1="0" x2="50" y2="100" stroke="red" stroke-dasharray="2,2"/></svg>
+                            <small>f(x) = 1/x</small>
+                        </div>
+                        <div class="thumb-card">
+                            <svg viewBox="0 0 100 100" width="100%" height="80"><path d="M 10 80 Q 30 80 40 50 T 45 10" fill="none" stroke="#10b981" stroke-width="3"/><path d="M 55 90 Q 70 30 90 30" fill="none" stroke="#10b981" stroke-width="3"/><line x1="0" y1="30" x2="100" y2="30" stroke="red" stroke-dasharray="2,2"/><line x1="50" y1="0" x2="50" y2="100" stroke="red" stroke-dasharray="2,2"/></svg>
+                            <small>f(x) = (2x)/(x-1)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: MATERI -->
+        <section id="materi" class="hidden">
+            <div class="text-center">
+                <h2>Materi Belajar</h2>
+                <p>Ikuti langkah-langkah di bawah ini untuk memahami materi sepenuhnya.</p>
+            </div>
+
+            <div class="materi-layout">
+                <div class="materi-content">
+                    
+                    <!-- Sub 1 -->
+                    <div class="materi-step active" id="step1">
+                        <h3>1. Bentuk Umum Fungsi Rasional</h3>
+                        <button class="audio-btn" onclick="app.speak('Fungsi rasional adalah fungsi yang berbentuk pecahan, di mana pembilang dan penyebutnya adalah polinomial. Syarat utamanya adalah penyebut tidak boleh sama dengan nol.')">
+                            🔊 Dengarkan Penjelasan
+                        </button>
+                        <p>Fungsi rasional adalah fungsi yang dapat ditulis dalam bentuk pecahan:</p>
+                        <div class="card text-center" style="background: var(--light-blue); font-size: 1.5rem; font-weight: bold; margin: 20px 0;">
+                            f(x) = <span style="border-bottom: 2px solid var(--primary); padding: 0 10px;">P(x)</span><br>
+                            <span style="padding-left: 55px;">Q(x)</span>
+                        </div>
+                        <p><strong>Syarat penting:</strong> Q(x) ≠ 0. Nilai x yang membuat penyebut menjadi nol akan menjadi nilai yang tidak terdefinisi dan biasanya membentuk sebuah garis batas imajiner yang disebut <em>Asimtot Tegak</em>.</p>
+                        
+                        <div class="flashcard" onclick="this.classList.toggle('flipped'); app.playSound('click')">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">Klik untuk melihat contoh spesifik 👆</div>
+                                <div class="flashcard-back">Contoh: f(x) = (ax + b) / (cx + d)<br>dengan cx + d ≠ 0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sub 2 -->
+                    <div class="materi-step" id="step2">
+                        <h3>2. Unsur-unsur Grafik</h3>
+                        <button class="audio-btn" onclick="app.speak('Ada tiga unsur penting dalam grafik fungsi rasional: Asimtot tegak, asimtot datar, dan titik potong sumbu.')">
+                            🔊 Dengarkan Penjelasan
+                        </button>
+                        <ul class="checklist" style="margin-bottom: 20px;">
+                            <li class="card"><strong>📏 Asimtot Tegak (Vertikal):</strong> Garis vertikal (x = a) yang didekati grafik tetapi tidak pernah disentuh. Terjadi saat penyebut bernilai nol.</li>
+                            <li class="card"><strong>📏 Asimtot Datar (Horizontal):</strong> Garis horizontal (y = b) yang didekati grafik saat x menuju tak hingga. Terjadi dari perbandingan koefisien derajat tertinggi.</li>
+                            <li class="card"><strong>🎯 Titik Potong:</strong> Titik dimana grafik memotong sumbu-X (saat y=0) dan memotong sumbu-Y (saat x=0).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Sub 3 -->
+                    <div class="materi-step" id="step3">
+                        <h3>3. Langkah-langkah Menggambar</h3>
+                        <p>Untuk menggambar grafik fungsi rasional secara manual, ikuti 4 langkah mudah ini:</p>
+                        <ol style="margin-left: 20px; line-height: 1.8; color: var(--text-dark);">
+                            <li><strong>Tentukan titik potong dengan sumbu-X.</strong> Syarat: Pembilang = 0.</li>
+                            <li><strong>Tentukan titik potong dengan sumbu-Y.</strong> Syarat: Substitusi x = 0.</li>
+                            <li><strong>Tentukan Asimtot Tegak dan Datar.</strong> (Garis putus-putus).</li>
+                            <li><strong>Tentukan titik bantu.</strong> Pilih nilai x di sebelah kiri dan kanan asimtot tegak untuk melihat arah kurva, lalu hubungkan titik-titik tersebut secara mulus mendekati asimtot.</li>
+                        </ol>
+                    </div>
+
+                    <!-- Sub 4 & 5 (Eksplorasi) -->
+                    <div class="materi-step" id="step4">
+                        <h3>4. Eksplorasi: Simulasi Interaktif</h3>
+                        <p>Cobalah ubah nilai <b>a, b, c,</b> dan <b>d</b> pada fungsi <strong>f(x) = (ax + b) / (cx + d)</strong> di bawah ini dan perhatikan perubahan grafiknya!</p>
+                        
+                        <div class="simulation-container">
+                            <div class="canvas-container">
+                                <canvas id="graphCanvas"></canvas>
+                            </div>
+                            <div class="controls">
+                                <div class="slider-group">
+                                    <label>a:</label>
+                                    <input type="range" id="valA" min="-5" max="5" value="1" step="0.5">
+                                    <span id="displayA" style="width: 30px; text-align:right;">1</span>
+                                </div>
+                                <div class="slider-group">
+                                    <label>b:</label>
+                                    <input type="range" id="valB" min="-5" max="5" value="0" step="0.5">
+                                    <span id="displayB" style="width: 30px; text-align:right;">0</span>
+                                </div>
+                                <div class="slider-group">
+                                    <label>c:</label>
+                                    <input type="range" id="valC" min="-5" max="5" value="1" step="0.5">
+                                    <span id="displayC" style="width: 30px; text-align:right;">1</span>
+                                </div>
+                                <div class="slider-group">
+                                    <label>d:</label>
+                                    <input type="range" id="valD" min="-5" max="5" value="0" step="0.5">
+                                    <span id="displayD" style="width: 30px; text-align:right;">0</span>
+                                </div>
+                            </div>
+                            <p style="text-align: center; margin-top: 15px; font-weight: bold; color: var(--primary);" id="formulaDisplay">f(x) = (1x + 0) / (1x + 0)</p>
+                        </div>
+                    </div>
+
+                    <div class="materi-nav">
+                        <button class="btn btn-outline" id="btnPrevMat" onclick="app.changeMateri(-1)">⬅ Sebelumnya</button>
+                        <span id="materiCounter" style="display:flex; align-items:center; font-weight:bold;">1 / 4</span>
+                        <button class="btn btn-primary" id="btnNextMat" onclick="app.changeMateri(1)">Selanjutnya ➡</button>
+                    </div>
+
+                </div>
+
+                <!-- Sidebar materi -->
+                <div class="card" style="align-self: start; position: sticky; top: 100px;">
+                    <h3>Daftar Isi</h3>
+                    <ul class="checklist">
+                        <li><span id="navMat1">🔵</span> 1. Bentuk Umum</li>
+                        <li><span id="navMat2">⚪</span> 2. Unsur Grafik</li>
+                        <li><span id="navMat3">⚪</span> 3. Langkah Gambar</li>
+                        <li><span id="navMat4">⚪</span> 4. Simulasi Interaktif</li>
+                    </ul>
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                    <button class="btn btn-primary" style="width: 100%;" onclick="app.navigate('latihan')">Lanjut Latihan ✍️</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: LATIHAN -->
+        <section id="latihan" class="hidden">
+            <div class="text-center">
+                <h2>Uji Pemahaman</h2>
+                <p>Selesaikan ketiga jenis latihan di bawah ini untuk mendapatkan lencana pencapaian!</p>
+            </div>
+
+            <!-- Latihan 1: Benar / Salah -->
+            <div class="quiz-section" id="quizTF">
+                <h3>A. Benar atau Salah?</h3>
+                <p>Pernyataan: "Asimtot tegak dari fungsi f(x) = 1 / (x - 2) adalah garis x = -2."</p>
+                <div class="tf-btn-group">
+                    <button class="tf-btn true" onclick="app.answerTF(true)">Benar</button>
+                    <button class="tf-btn false" onclick="app.answerTF(false)">Salah</button>
+                </div>
+                <div id="feedbackTF" style="margin-top: 15px; font-weight: bold; display: none;"></div>
+            </div>
+
+            <!-- Latihan 2: Mencocokkan -->
+            <div class="quiz-section" id="quizMatch">
+                <h3>B. Pasangkan Konsep!</h3>
+                <p>Klik kotak di sebelah Kiri, lalu klik pasangannya di kotak sebelah Kanan.</p>
+                <div class="match-container">
+                    <div class="match-col" id="matchLeft">
+                        <div class="match-item left-item" data-id="1">Penyebut fungsi = 0</div>
+                        <div class="match-item left-item" data-id="2">Pembilang fungsi = 0</div>
+                        <div class="match-item left-item" data-id="3">Batas yang didekati saat x menuju ∞</div>
+                    </div>
+                    <div class="match-col" id="matchRight">
+                        <div class="match-item right-item" data-target="2">Titik Potong Sumbu-X</div>
+                        <div class="match-item right-item" data-target="3">Asimtot Datar</div>
+                        <div class="match-item right-item" data-target="1">Asimtot Tegak</div>
+                    </div>
+                </div>
+                <div id="feedbackMatch" style="margin-top: 15px; font-weight: bold; display: none;"></div>
+            </div>
+
+            <!-- Latihan 3: Drag & Drop (Tap to Place) -->
+            <div class="quiz-section" id="quizDnd">
+                <h3>C. Pilih & Letakkan Label</h3>
+                <p>Pilih label kuning di bawah, lalu klik pada kotak kosong yang tepat pada gambar (A/B/C).</p>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;" id="dndLabels">
+                    <button class="btn btn-outline dnd-label" style="background: var(--accent); color: white; border: none;" data-val="tegak">Asimtot Tegak</button>
+                    <button class="btn btn-outline dnd-label" style="background: var(--accent); color: white; border: none;" data-val="datar">Asimtot Datar</button>
+                    <button class="btn btn-outline dnd-label" style="background: var(--accent); color: white; border: none;" data-val="potong">Titik Potong-Y</button>
+                </div>
+
+                <div style="position: relative; max-width: 500px; margin: 0 auto;">
+                    <!-- Grafik SVG -->
+                    <svg viewBox="0 0 400 300" width="100%" height="100%" style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;">
+                        <!-- Grid -->
+                        <line x1="0" y1="150" x2="400" y2="150" stroke="#cbd5e1"/>
+                        <line x1="200" y1="0" x2="200" y2="300" stroke="#cbd5e1"/>
+                        
+                        <!-- Asimtot -->
+                        <line x1="250" y1="0" x2="250" y2="300" stroke="red" stroke-dasharray="5,5" stroke-width="2"/> <!-- x=2 (Tegak) -->
+                        <line x1="0" y1="100" x2="400" y2="100" stroke="green" stroke-dasharray="5,5" stroke-width="2"/> <!-- y=1 (Datar) -->
+                        
+                        <!-- Kurva f(x) = 1/(x-2) + 1 -->
+                        <path d="M 0 140 Q 200 140 240 300" fill="none" stroke="blue" stroke-width="3"/>
+                        <path d="M 260 0 Q 300 90 400 95" fill="none" stroke="blue" stroke-width="3"/>
+
+                        <!-- Titik Potong (0, 0.5) => (200, 125) -->
+                        <circle cx="200" cy="125" r="5" fill="purple"/>
+                    </svg>
+
+                    <!-- Dropzones overlay -->
+                    <div class="dropzone" data-correct="tegak" style="position: absolute; top: 10px; left: 260px; background: rgba(255,255,255,0.9); border: 2px dashed #94a3b8; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">[Kotak A]</div>
+                    <div class="dropzone" data-correct="datar" style="position: absolute; top: 70px; left: 10px; background: rgba(255,255,255,0.9); border: 2px dashed #94a3b8; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">[Kotak B]</div>
+                    <div class="dropzone" data-correct="potong" style="position: absolute; top: 135px; left: 140px; background: rgba(255,255,255,0.9); border: 2px dashed #94a3b8; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">[Kotak C]</div>
+                </div>
+                <div id="feedbackDnd" style="margin-top: 15px; font-weight: bold; text-align: center; display: none;"></div>
+            </div>
+
+            <div class="text-center" style="margin-top: 40px;">
+                <button class="btn btn-outline" onclick="app.resetExercises()">Ulangi Latihan 🔄</button>
+            </div>
+
+            <!-- Sertifikat Mini -->
+            <div id="certificate" class="card text-center hidden" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 2px solid var(--secondary); margin-top: 30px;">
+                <h2 style="font-size: 2rem; color: var(--accent);">🎉 SELAMAT! 🎉</h2>
+                <p style="font-size: 1.2rem; font-weight: bold;">Anda telah menyelesaikan semua materi dan latihan.</p>
+                <div style="font-size: 4rem; margin: 10px 0;">🏅</div>
+                <p>Terus semangat belajar Matematika!</p>
+            </div>
+
+        </section>
+
+        <!-- SECTION: REFLEKSI -->
+        <section id="refleksi" class="hidden">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="text-center">Refleksi Belajar Hari Ini</h2>
+                <p class="text-center">Bagaimana perasaanmu setelah mempelajari materi ini?</p>
+                
+                <div class="emoji-group">
+                    <button class="emoji-btn" onclick="app.selectEmoji(this, 'Senang/Paham')">😀</button>
+                    <button class="emoji-btn" onclick="app.selectEmoji(this, 'Cukup')">😐</button>
+                    <button class="emoji-btn" onclick="app.selectEmoji(this, 'Masih Belajar')">🤔</button>
+                </div>
+
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                <h3>Checklist Pemahaman:</h3>
+                <div class="checklist">
+                    <label class="check-item">
+                        <input type="checkbox" onchange="app.updateReflection()"> Saya mengerti bentuk umum fungsi rasional.
+                    </label>
+                    <label class="check-item">
+                        <input type="checkbox" onchange="app.updateReflection()"> Saya bisa menentukan asimtot tegak dan datar.
+                    </label>
+                    <label class="check-item">
+                        <input type="checkbox" onchange="app.updateReflection()"> Saya tahu langkah-langkah menggambar grafiknya.
+                    </label>
+                </div>
+
+                <div id="reflectionSummary" style="margin-top: 20px; padding: 15px; background: var(--light-blue); border-radius: 8px; font-weight: bold; display: none;">
+                    Terima kasih atas refleksinya! Terus berlatih agar semakin mahir.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PENGEMBANG -->
+        <section id="pengembang" class="hidden">
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <h2 class="text-center">Tentang Pengembang</h2>
+                <div class="dev-profile">
+                    <div class="dev-avatar">👨‍💻</div>
+                    <h3 style="margin-bottom: 5px;">Guru Kreatif</h3>
+                    <p style="color: var(--secondary); font-weight: bold;">Pendidik Matematika</p>
+                </div>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                <p><strong>Deskripsi Media:</strong><br> Media pembelajaran interaktif berbasis web (SPA) ini dikembangkan khusus untuk membantu siswa Kelas XI memahami materi Menggambar Grafik Fungsi Rasional dengan cara yang visual dan interaktif.</p>
+                <p><strong>Tujuan:</strong><br> Meningkatkan motivasi belajar siswa dan mempermudah visualisasi konsep abstrak dari fungsi matematika.</p>
+                <p><strong>Teknologi:</strong> HTML5, CSS3 murni, dan Vanilla JavaScript. (Single File Application).</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Media Pembelajaran Interaktif. Dibuat untuk Tujuan Edukasi.</p>
+    </footer>
+
+    <div id="toast">Notifikasi</div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const app = {
+            state: {
+                currentSection: 'beranda',
+                materiStep: 1,
+                progress: { readMateri: false, tf: false, match: false, dnd: false, reflection: false },
+                bgmMuted: true
+            },
+            
+            // Audio Engine (Web Audio API for tiny footprint without large base64)
+            audioCtx: null,
+            initAudio: function() {
+                if (!this.audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new AudioContext();
+                    this.setupBGM();
+                }
+            },
+            playSound: function(type) {
+                if (this.state.bgmMuted) return;
+                this.initAudio();
+                if(this.audioCtx.state === 'suspended') this.audioCtx.resume();
+                
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                
+                const now = this.audioCtx.currentTime;
+                
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.start(now); osc.stop(now + 0.1);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.setValueAtTime(600, now + 0.1);
+                    osc.frequency.setValueAtTime(800, now + 0.2);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.linearRampToValueAtTime(150, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                }
+            },
+            
+            // Simple Generative BGM (Arpeggio)
+            bgmInterval: null,
+            setupBGM: function() {
+                const notes = [261.63, 329.63, 392.00, 523.25]; // C E G C
+                let noteIdx = 0;
+                this.bgmInterval = setInterval(() => {
+                    if (this.state.bgmMuted || !this.audioCtx) return;
+                    const osc = this.audioCtx.createOscillator();
+                    const gain = this.audioCtx.createGain();
+                    osc.connect(gain); gain.connect(this.audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.value = notes[noteIdx] / 2; // Low octave
+                    gain.gain.setValueAtTime(0, this.audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.03, this.audioCtx.currentTime + 0.5);
+                    gain.gain.linearRampToValueAtTime(0, this.audioCtx.currentTime + 2.0);
+                    osc.start(); osc.stop(this.audioCtx.currentTime + 2.0);
+                    noteIdx = (noteIdx + 1) % notes.length;
+                }, 2000);
+            },
+            toggleBGM: function() {
+                this.initAudio();
+                this.state.bgmMuted = !this.state.bgmMuted;
+                const icon = document.getElementById('audioIcon');
+                if (this.state.bgmMuted) {
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>';
+                    this.showToast("Audio Dimatikan");
+                } else {
+                    if(this.audioCtx.state === 'suspended') this.audioCtx.resume();
+                    icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>';
+                    this.showToast("Audio Dinyalakan");
+                }
+            },
+
+            // Text to Speech
+            speak: function(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'id-ID';
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    this.showToast("Browser Anda tidak mendukung fitur Suara.");
+                }
+            },
+
+            // Navigation & SPA Logic
+            navigate: function(sectionId) {
+                this.playSound('click');
+                document.querySelectorAll('section').forEach(sec => sec.classList.add('hidden'));
+                document.getElementById(sectionId).classList.remove('hidden');
+                
+                document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+                document.querySelector(`.nav-links a[data-target="${sectionId}"]`).classList.add('active');
+                
+                this.state.currentSection = sectionId;
+                if(window.innerWidth <= 768) document.getElementById('navLinks').classList.remove('show');
+                window.scrollTo(0, 0);
+
+                if (sectionId === 'materi') {
+                    this.state.progress.readMateri = true;
+                    this.drawGraph();
+                    this.updateProgress();
+                }
+            },
+
+            // Materi Logic
+            changeMateri: function(dir) {
+                this.playSound('click');
+                this.state.materiStep += dir;
+                if (this.state.materiStep < 1) this.state.materiStep = 1;
+                if (this.state.materiStep > 4) this.state.materiStep = 4;
+                
+                document.querySelectorAll('.materi-step').forEach(el => el.classList.remove('active'));
+                document.getElementById('step' + this.state.materiStep).classList.add('active');
+                
+                document.getElementById('materiCounter').innerText = `${this.state.materiStep} / 4`;
+                
+                // Update sidebar dots
+                for(let i=1; i<=4; i++) {
+                    document.getElementById('navMat'+i).innerText = (i === this.state.materiStep) ? '🔵' : '⚪';
+                }
+
+                if (this.state.materiStep === 4) this.drawGraph();
+            },
+
+            // Graph Simulation Canvas
+            drawGraph: function() {
+                const canvas = document.getElementById('graphCanvas');
+                if(!canvas) return;
+                const ctx = canvas.getContext('2d');
+                
+                // Get container dimensions to make it responsive
+                const container = canvas.parentElement;
+                canvas.width = container.clientWidth;
+                canvas.height = container.clientHeight;
+
+                const a = parseFloat(document.getElementById('valA').value);
+                const b = parseFloat(document.getElementById('valB').value);
+                const c = parseFloat(document.getElementById('valC').value);
+                const d = parseFloat(document.getElementById('valD').value);
+                
+                document.getElementById('displayA').innerText = a;
+                document.getElementById('displayB').innerText = b;
+                document.getElementById('displayC').innerText = c;
+                document.getElementById('displayD').innerText = d;
+                document.getElementById('formulaDisplay').innerText = `f(x) = (${a}x + ${b}) / (${c}x + ${d})`;
+
+                const w = canvas.width;
+                const h = canvas.height;
+                const scaleX = w / 20; // x from -10 to 10
+                const scaleY = h / 20; // y from -10 to 10
+                const offsetX = w / 2;
+                const offsetY = h / 2;
+
+                ctx.clearRect(0, 0, w, h);
+
+                // Draw Grid & Axes
+                ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+                for(let i = -10; i <= 10; i++) {
+                    ctx.beginPath(); ctx.moveTo(offsetX + i*scaleX, 0); ctx.lineTo(offsetX + i*scaleX, h); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(0, offsetY - i*scaleY); ctx.lineTo(w, offsetY - i*scaleY); ctx.stroke();
+                }
+                ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 2;
+                ctx.beginPath(); ctx.moveTo(offsetX, 0); ctx.lineTo(offsetX, h); ctx.stroke(); // Y
+                ctx.beginPath(); ctx.moveTo(0, offsetY); ctx.lineTo(w, offsetY); ctx.stroke(); // X
+
+                if (c === 0 && d === 0) return; // Invalid
+
+                // Asymptotes
+                const asymX = -d / c;
+                if(c !== 0 && asymX >= -10 && asymX <= 10) {
+                    ctx.strokeStyle = 'red'; ctx.setLineDash([5, 5]);
+                    ctx.beginPath(); ctx.moveTo(offsetX + asymX*scaleX, 0); ctx.lineTo(offsetX + asymX*scaleX, h); ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+                const asymY = a / c;
+                if(c !== 0 && asymY >= -10 && asymY <= 10) {
+                    ctx.strokeStyle = 'green'; ctx.setLineDash([5, 5]);
+                    ctx.beginPath(); ctx.moveTo(0, offsetY - asymY*scaleY); ctx.lineTo(w, offsetY - asymY*scaleY); ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                // Draw Curve
+                ctx.strokeStyle = 'blue'; ctx.lineWidth = 3;
+                ctx.beginPath();
+                let prevValid = false;
+                
+                for(let px = 0; px <= w; px++) {
+                    const x = (px - offsetX) / scaleX;
+                    const denom = c*x + d;
+                    
+                    // Prevent drawing across vertical asymptote
+                    if(Math.abs(denom) < 0.1) { prevValid = false; continue; }
+                    
+                    const y = (a*x + b) / denom;
+                    const py = offsetY - y*scaleY;
+
+                    if (py >= -100 && py <= h + 100) { // Limit drawing out of bounds
+                        if (!prevValid) ctx.moveTo(px, py);
+                        else ctx.lineTo(px, py);
+                        prevValid = true;
+                    } else {
+                        prevValid = false;
+                    }
+                }
+                ctx.stroke();
+            },
+
+            // Latihan Logic
+            answerTF: function(ans) {
+                const isCorrect = (ans === false); // "x = -2" is wrong, answer is x=2. So False is correct.
+                const feedback = document.getElementById('feedbackTF');
+                feedback.style.display = 'block';
+                if(isCorrect) {
+                    feedback.innerText = "✅ Benar! Asimtot tegak terjadi saat penyebut = 0, yaitu x - 2 = 0, maka x = 2.";
+                    feedback.style.color = "var(--success)";
+                    this.playSound('correct');
+                    this.state.progress.tf = true;
+                } else {
+                    feedback.innerText = "❌ Kurang tepat. Coba perhatikan kembali syarat penyebut = 0.";
+                    feedback.style.color = "var(--danger)";
+                    this.playSound('wrong');
+                }
+                this.updateProgress();
+            },
+
+            // Match Logic
+            selectedMatch: null,
+            initMatch: function() {
+                let matchedCount = 0;
+                document.querySelectorAll('.left-item').forEach(el => {
+                    el.onclick = () => {
+                        if(el.classList.contains('matched')) return;
+                        this.playSound('click');
+                        document.querySelectorAll('.left-item').forEach(i => i.classList.remove('selected'));
+                        el.classList.add('selected');
+                        this.selectedMatch = el.getAttribute('data-id');
+                    }
+                });
+                document.querySelectorAll('.right-item').forEach(el => {
+                    el.onclick = () => {
+                        if(el.classList.contains('matched')) return;
+                        if(this.selectedMatch) {
+                            if(el.getAttribute('data-target') === this.selectedMatch) {
+                                // Correct match
+                                this.playSound('correct');
+                                el.classList.add('matched');
+                                el.innerText += " ✅";
+                                const leftEl = document.querySelector(`.left-item[data-id="${this.selectedMatch}"]`);
+                                leftEl.classList.add('matched');
+                                leftEl.classList.remove('selected');
+                                this.selectedMatch = null;
+                                matchedCount++;
+                                if(matchedCount === 3) {
+                                    document.getElementById('feedbackMatch').innerText = "🎉 Luar biasa! Semua pasangan benar.";
+                                    document.getElementById('feedbackMatch').style.display = 'block';
+                                    document.getElementById('feedbackMatch').style.color = "var(--success)";
+                                    this.state.progress.match = true;
+                                    this.updateProgress();
+                                }
+                            } else {
+                                this.playSound('wrong');
+                                this.showToast("Pasangan kurang tepat!");
+                            }
+                        } else {
+                            this.showToast("Pilih kotak sebelah kiri terlebih dahulu.");
+                        }
+                    }
+                });
+            },
+
+            // DND Logic (Tap to place)
+            selectedDnd: null,
+            initDnd: function() {
+                let placedCount = 0;
+                document.querySelectorAll('.dnd-label').forEach(el => {
+                    el.onclick = () => {
+                        if(el.disabled) return;
+                        this.playSound('click');
+                        document.querySelectorAll('.dnd-label').forEach(i => i.style.opacity = '1');
+                        el.style.opacity = '0.6';
+                        this.selectedDnd = { val: el.getAttribute('data-val'), text: el.innerText, el: el };
+                    }
+                });
+
+                document.querySelectorAll('.dropzone').forEach(zone => {
+                    zone.onclick = () => {
+                        if(!this.selectedDnd) { this.showToast("Pilih label kuning dulu!"); return; }
+                        if(zone.getAttribute('data-correct') === this.selectedDnd.val) {
+                            this.playSound('correct');
+                            zone.innerText = "✅ " + this.selectedDnd.text;
+                            zone.style.background = "#d1fae5";
+                            zone.style.borderColor = "var(--success)";
+                            zone.style.cursor = "default";
+                            this.selectedDnd.el.disabled = true;
+                            this.selectedDnd.el.classList.replace('btn-outline', 'btn-primary'); // mark done
+                            this.selectedDnd = null;
+                            placedCount++;
+                            if(placedCount === 3) {
+                                document.getElementById('feedbackDnd').innerText = "🎉 Sempurna! Anda berhasil meletakkan semua label.";
+                                document.getElementById('feedbackDnd').style.display = 'block';
+                                document.getElementById('feedbackDnd').style.color = "var(--success)";
+                                this.state.progress.dnd = true;
+                                this.updateProgress();
+                            }
+                        } else {
+                            this.playSound('wrong');
+                            this.showToast("Penempatan kurang tepat!");
+                        }
+                    }
+                });
+            },
+
+            resetExercises: function() {
+                this.playSound('click');
+                // Reset TF
+                document.getElementById('feedbackTF').style.display = 'none';
+                
+                // Reset Match
+                document.getElementById('feedbackMatch').style.display = 'none';
+                document.querySelectorAll('.match-item').forEach(el => {
+                    el.classList.remove('selected', 'matched');
+                    if(el.classList.contains('right-item')) el.innerText = el.innerText.replace(' ✅', '');
+                });
+                
+                // Reset Dnd
+                document.getElementById('feedbackDnd').style.display = 'none';
+                document.querySelectorAll('.dnd-label').forEach(el => {
+                    el.disabled = false;
+                    el.style.opacity = '1';
+                    el.classList.replace('btn-primary', 'btn-outline');
+                });
+                document.querySelectorAll('.dropzone').forEach(zone => {
+                    zone.innerText = "[Kotak Kosong]";
+                    zone.style.background = "rgba(255,255,255,0.9)";
+                    zone.style.borderColor = "#94a3b8";
+                    zone.style.cursor = "pointer";
+                });
+                
+                this.state.progress.tf = false;
+                this.state.progress.match = false;
+                this.state.progress.dnd = false;
+                this.updateProgress();
+                this.initMatch();
+                this.initDnd();
+                this.showToast("Latihan direset!");
+            },
+
+            // Refleksi Logic
+            selectEmoji: function(btn, mood) {
+                this.playSound('click');
+                document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.showToast(`Mood kamu: ${mood}`);
+                this.state.progress.reflection = true;
+                this.updateReflection();
+            },
+            updateReflection: function() {
+                let checks = 0;
+                document.querySelectorAll('.check-item input').forEach(chk => { if(chk.checked) checks++; });
+                const summary = document.getElementById('reflectionSummary');
+                if(checks > 0 || this.state.progress.reflection) {
+                    summary.style.display = 'block';
+                    this.state.progress.reflection = true;
+                    this.updateProgress();
+                }
+            },
+
+            // Progress tracking & Storage
+            updateProgress: function() {
+                let score = 0;
+                if(this.state.progress.readMateri) score += 20;
+                if(this.state.progress.tf) score += 20;
+                if(this.state.progress.match) score += 20;
+                if(this.state.progress.dnd) score += 20;
+                if(this.state.progress.reflection) score += 20;
+
+                document.getElementById('globalProgress').style.width = score + "%";
+                document.getElementById('progressBarHome').style.width = score + "%";
+                document.getElementById('progressText').innerText = score + "%";
+                
+                if(score === 100) {
+                    document.getElementById('badgeDisplay').style.filter = "grayscale(0%)";
+                    document.getElementById('certificate').classList.remove('hidden');
+                } else {
+                    document.getElementById('badgeDisplay').style.filter = "grayscale(100%)";
+                    document.getElementById('certificate').classList.add('hidden');
+                }
+
+                // Save to local storage
+                try {
+                    localStorage.setItem('mathfun_progress', JSON.stringify(this.state.progress));
+                } catch(e) {}
+            },
+
+            loadProgress: function() {
+                try {
+                    const saved = localStorage.getItem('mathfun_progress');
+                    if(saved) {
+                        this.state.progress = JSON.parse(saved);
+                        this.updateProgress();
+                    }
+                } catch(e) {}
+            },
+
+            // Utils
+            showToast: function(msg) {
+                const toast = document.getElementById('toast');
+                toast.innerText = msg;
+                toast.className = "show";
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+            },
+            toggleFullscreen: function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        this.showToast("Gagal masuk mode layar penuh");
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            }
+        };
+
+        // Event Listeners Initialization
+        window.onload = () => {
+            // Setup events
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    app.navigate(e.target.closest('a').getAttribute('data-target'));
+                });
+            });
+
+            document.getElementById('menuToggle').addEventListener('click', () => {
+                document.getElementById('navLinks').classList.toggle('show');
+            });
+
+            document.getElementById('fullscreenToggle').addEventListener('click', () => app.toggleFullscreen());
+            document.getElementById('audioToggle').addEventListener('click', () => app.toggleBGM());
+
+            // Listen to sliders
+            ['valA', 'valB', 'valC', 'valD'].forEach(id => {
+                document.getElementById(id).addEventListener('input', () => app.drawGraph());
+            });
+            window.addEventListener('resize', () => {
+                if(app.state.currentSection === 'materi' && app.state.materiStep === 4) app.drawGraph();
+            });
+
+            // Init App
+            app.initMatch();
+            app.initDnd();
+            app.loadProgress();
+            app.drawGraph(); // initial draw
+            
+            // Allow user to interact first to unlock audio
+            document.body.addEventListener('click', () => {
+                if(!app.audioCtx) app.initAudio();
+            }, {once: true});
+        };
+    </script>
+</body>
+</html>
