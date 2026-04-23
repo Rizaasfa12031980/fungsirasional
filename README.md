@@ -1,0 +1,2 @@
+# fungsirasional
+menggambar fungsi rasional
